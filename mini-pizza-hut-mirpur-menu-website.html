@@ -201,6 +201,38 @@
   .fab{position:fixed;right:16px;bottom:16px;z-index:70;background:var(--green);color:#fff;text-decoration:none;font-weight:800;font-size:14.5px;padding:14px 20px;border-radius:999px;box-shadow:0 16px 34px rgba(21,115,71,.45);display:inline-flex;gap:9px;align-items:center}
   .fab svg{width:20px;height:20px}
   .fab .count{background:#fff;color:var(--green-dark);border-radius:999px;min-width:24px;height:24px;display:none;place-items:center;font-size:13px;padding:0 6px}
+
+  /* ---------- animations ---------- */
+  @keyframes dropIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes riseIn{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes btnPop{0%{transform:scale(1)}40%{transform:scale(1.16)}100%{transform:scale(1)}}
+  @keyframes badgePop{0%{transform:scale(.3)}55%{transform:scale(1.4)}100%{transform:scale(1)}}
+  .topbar{animation:dropIn .55s ease both}
+  .hero-in>div:first-child{animation:riseIn .7s .08s ease both}
+  .hero-photo{animation:riseIn .8s .22s ease both}
+  .strip .info{animation:riseIn .5s ease backwards}
+  .strip .info:nth-child(2){animation-delay:.07s}
+  .strip .info:nth-child(3){animation-delay:.14s}
+  .strip .info:nth-child(4){animation-delay:.21s}
+  .deals .deal{animation:riseIn .55s ease backwards}
+  .deals .deal:nth-child(2){animation-delay:.09s}
+  .deals .deal:nth-child(3){animation-delay:.18s}
+  .rv{opacity:0}
+  .rv-in{animation:riseIn .5s cubic-bezier(.22,.61,.36,1) backwards}
+  .card{transition:transform .3s ease,box-shadow .3s ease}
+  .card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+  .card img.ph{transition:transform 1.4s ease}
+  .card:hover img.ph{transform:scale(1.05) translateY(-3px)}
+  .add-btn{transition:background .15s ease,color .15s ease}
+  .add-btn.pop{animation:btnPop .35s ease}
+  .fab .count.pop{animation:badgePop .45s ease}
+  .deal{transition:transform .3s ease,box-shadow .3s ease}
+  .deal:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+    .rv{opacity:1!important}
+  }
 </style>
 </head>
 <body>
@@ -377,7 +409,7 @@ Is website se aap ko ye faida hoga:
 3. Google par aap ki shop asani se milegi
 4. Aik QR code bhi hai — shop par lagayein ge to customer scan karke menu dekh lega aur order kar lega
 
-Website ka link: https://abdulwaris75888-jpg.github.io/mini-pizza-hut-mirpur-menu-website/
+Website ka link: https://abdulwaris75888-jpg.github.io/mini-pizza-hut-mirpur-menu-website/mini-pizza-hut-mirpur-menu-website.html
 
 Agar kisi item ki price change hui ho to bas bata dein, main usi din website par update kar dunga. Koi advance payment nahi hai — pehle website dekhein, phir faisla karein.
 
@@ -389,7 +421,7 @@ Shukriya!</pre>
       </div>
       <div class="msg">
         <h3>Message 2 — English <span class="who">Short Version</span></h3>
-        <pre id="msg2">Hello! I noticed that Mini Pizza Hut Mirpur does not have a website on Google Maps, so I have made a menu website for you — with your full menu and the real prices from your menu flyer: https://abdulwaris75888-jpg.github.io/mini-pizza-hut-mirpur-menu-website/
+        <pre id="msg2">Hello! I noticed that Mini Pizza Hut Mirpur does not have a website on Google Maps, so I have made a menu website for you — with your full menu and the real prices from your menu flyer: https://abdulwaris75888-jpg.github.io/mini-pizza-hut-mirpur-menu-website/mini-pizza-hut-mirpur-menu-website.html
 
 On this website, customers can see your full menu with prices and send their order directly to your WhatsApp — the total is calculated automatically. It also has a QR code you can print for your shop counter.
 
@@ -403,7 +435,7 @@ Thank you!</pre>
       </div>
       <div class="msg" style="grid-column:1/-1">
         <h3>Message 3 — Follow-Up <span class="who">2 Din Baad, Agar Reply Na Aaye</span></h3>
-        <pre id="msg3">Assalam-o-Alaikum, main ne 2 din pehle Mini Pizza Hut ke liye bani hui menu website bheji thi — us par aap ke flyer wala poora menu aur asli prices lage hue hain. Agar dekhne ka time nahi mila to link dobara bhej raha hoon: https://abdulwaris75888-jpg.github.io/mini-pizza-hut-mirpur-menu-website/
+        <pre id="msg3">Assalam-o-Alaikum, main ne 2 din pehle Mini Pizza Hut ke liye bani hui menu website bheji thi — us par aap ke flyer wala poora menu aur asli prices lage hue hain. Agar dekhne ka time nahi mila to link dobara bhej raha hoon: https://abdulwaris75888-jpg.github.io/mini-pizza-hut-mirpur-menu-website/mini-pizza-hut-mirpur-menu-website.html
 
 Sirf 2 minute lagein ge dekhne mein. Agar kisi item ki price change hui ho to bata dein — main usi din website par update kar dunga.
 
@@ -542,10 +574,14 @@ function renderMenu(filter){
     b.addEventListener("click", function(){
       var m = byId(b.getAttribute("data-add"));
       addToCart(m.name, m.sizes ? selSize[m.id] : null, priceOf(m));
+      b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop");
       b.textContent = "✓ Add Ho Gaya";
       b.classList.add("added");
       setTimeout(function(){ b.textContent = "+ Add"; b.classList.remove("added"); }, 1200);
     });
+  });
+  grid.querySelectorAll(".card").forEach(function(card, i){
+    armReveal(card, (i % 6) * 40);
   });
 }
 
@@ -568,6 +604,8 @@ function renderCart(){
   var fab = document.getElementById("fabCount");
   fab.textContent = count;
   fab.style.display = count > 0 ? "grid" : "none";
+  if(count > prevFabCount && count > 0){ fab.classList.remove("pop"); void fab.offsetWidth; fab.classList.add("pop"); }
+  prevFabCount = count;
   if(keys.length === 0){
     list.innerHTML = '<div class="empty">Abhi koi item add nahi hua — upar menu se “+ Add” dabayein.</div>';
     sum.innerHTML = "";
@@ -615,14 +653,14 @@ document.querySelectorAll("[data-add-id]").forEach(function(a){
     e.preventDefault();
     var m = byId(a.getAttribute("data-add-id"));
     if(m) addToCart(m.name, m.sizes ? selSize[m.id] : null, priceOf(m));
-    document.getElementById("order").scrollIntoView({behavior:"smooth"});
+    document.getElementById("order").scrollIntoView({behavior:SMOOTH});
   });
 });
 
 document.getElementById("sendOrder").addEventListener("click", function(){
   var keys = Object.keys(cart);
   if(keys.length === 0){
-    document.getElementById("menu").scrollIntoView({behavior:"smooth"});
+    document.getElementById("menu").scrollIntoView({behavior:SMOOTH});
     return;
   }
   var lines = ["Assalam-o-Alaikum! Main Mini Pizza Hut Mirpur se order karna chahta hoon:", ""];
@@ -668,6 +706,31 @@ function fallbackCopy(text, btn){
 document.querySelectorAll("[data-send]").forEach(function(a){
   a.setAttribute("href", "https://wa.me/" + WA + "?text=" + encodeURIComponent(document.getElementById(a.getAttribute("data-send")).textContent));
 });
+
+/* ----- scroll reveal animations ----- */
+var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var SMOOTH = reduceMotion ? "auto" : "smooth";
+var prevFabCount = 0;
+var revealIO = null;
+if(!reduceMotion && "IntersectionObserver" in window){
+  revealIO = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        en.target.classList.remove("rv");
+        en.target.classList.add("rv-in");
+        revealIO.unobserve(en.target);
+      }
+    });
+  }, {threshold:.05, rootMargin:"0px 0px 140px 0px"});
+}
+function armReveal(el, delay){
+  if(!revealIO || !el) return;
+  el.classList.add("rv");
+  el.style.animationDelay = (delay || 0) + "ms";
+  revealIO.observe(el);
+}
+document.querySelectorAll(".order-grid .panel, .pitch-grid .msg").forEach(function(el, i){ armReveal(el, (i % 3) * 60); });
+armReveal(document.querySelector(".menu-note"), 0);
 
 renderMenu("all");
 renderCart();
